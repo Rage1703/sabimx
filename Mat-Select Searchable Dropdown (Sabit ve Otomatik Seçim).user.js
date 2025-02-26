@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.2
 // @description  Mat-Select dropdown'lara sabit bir arama kutusu ekler, Türkçe destekli arama yapar, kutuyu otomatik etkinleştirir ve ilk uygun seçeneği Enter ile seçer.
-// @author       Your Name
+// @author       Rage17
 // @match        *://*/*
 // @grant        none
 // ==/UserScript==

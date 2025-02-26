@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.1
 // @description  Textarea içinde veri girildikçe veya değişiklik oldukça TCKN: veya TC: verisini otomatik aktarır ve belirli ifadeler geçerse başvuru türü ve sebebini seçer.
-// @author       Your Name
+// @author       Rage17
 // @match        https://sabim.sonitel.io/*
 // @grant        none
 // ==/UserScript==

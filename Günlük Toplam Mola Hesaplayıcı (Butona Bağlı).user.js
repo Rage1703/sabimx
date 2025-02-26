@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.3
 // @description  Kısa mola ve yemek molası sürelerini toplayarak toplamın altına ekler, butona bağlı çalışır (sayfa yüklemesini beklemez).
-// @author       Your Name
+// @author       Rage17
 // @match        https://sabim.sonitel.io/*
 // @grant        none
 // ==/UserScript==

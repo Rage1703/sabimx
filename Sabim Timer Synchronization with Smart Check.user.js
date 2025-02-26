@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.3
 // @description  Süre bilgisini senkronize eder, gereksiz veri çekmez ve takılmaları önler.
-// @author       Your Name
+// @author       Rage17
 // @match        https://sabim.sonitel.io/client/agent
 // @match        https://sabim.sonitel.io/custom/sabim?MobileNumber=*
 // @grant        none

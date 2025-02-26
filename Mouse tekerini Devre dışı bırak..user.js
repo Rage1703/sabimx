@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  matinput type="number" öğelerinde fare tekeri ile değer değişimini engeller
-// @author       [Kendi Adınız]
+// @author       Rage17
 // @match        https://sabim.sonitel.io/*
 // @grant        none
 // ==/UserScript==

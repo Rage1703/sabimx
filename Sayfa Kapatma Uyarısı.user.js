@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  Sayfayı kapatmadan önce onay isteyen bir betik
-// @author       [Kendi Adınız]
+// @author       Rage17
 // @match        https://sabim.sonitel.io/custom/sabim?MobileNumber=*
 // @grant        none
 // ==/UserScript==

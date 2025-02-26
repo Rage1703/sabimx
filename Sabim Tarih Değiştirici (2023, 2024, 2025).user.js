@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.3
 // @description  Tarih alanını belirlenen bir değere günceller (2023, 2024 ve 2025 butonları eklendi)
-// @author       Your Name
+// @author       Rage17
 // @match        https://sabim.sonitel.io/custom/sabim?MobileNumber=*
 // @grant        none
 // ==/UserScript==

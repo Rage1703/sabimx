@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.1
 // @description  Belirli textarea alanlarını Türkçe karakter desteğiyle büyük harfe çevirir ve imleç konumunu korur. Ayrıca textarea yüksekliğini artırır.
-// @author       YourName
+// @author       Rage17
 // @match        https://sabim.sonitel.io/*
 // @grant        none
 // ==/UserScript==
