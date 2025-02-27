@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  Telefon numarasına göre tarihleri otomatik günceller, ancak numara butona basıldığında değişir.
-// @author       Your Name
+// @author       Rage17
 // @match        https://sabim.sonitel.io/*
 // @grant        none
 // ==/UserScript==
