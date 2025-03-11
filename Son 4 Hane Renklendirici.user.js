@@ -91,5 +91,5 @@
         } else {
             console.warn("Gsm No input henüz bulunamadı, tekrar kontrol ediliyor...");
         }
-    }, 500); // Her 500 ms'de bir kontrol et
+    }, 1000); // Her 1000 ms'de bir kontrol et
 })();
