@@ -3,7 +3,7 @@
 // @version      2.0
 // @description  Telefon numarasına göre başlangıç ve bitiş tarihlerini otomatik doldurur, müdavim etiketi ekler (Dark Rider efekti). Tıklanınca tarihleri tekrar yükler.
 // @author       Rage17
-// @match        https://sabim.sonitel.io/*
+// @match        https://sabim.sonitel.io/custom/sabim?MobileNumber=*
 // @grant        none
 // ==/UserScript==
 

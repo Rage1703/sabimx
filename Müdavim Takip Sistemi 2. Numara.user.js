@@ -3,7 +3,7 @@
 // @version      1.2
 // @description  Telefon numarasına göre tarihleri otomatik günceller, ancak numara butona basıldığında değişir.
 // @author       Rage17
-// @match        https://sabim.sonitel.io/*
+// @match        https://sabim.sonitel.io/custom/sabim?MobileNumber=*
 // @grant        none
 // ==/UserScript==
 
