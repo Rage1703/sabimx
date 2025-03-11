@@ -1,6 +1,5 @@
 // ==UserScript==
-// @name         Mouse tekerini Devre dışı bırak.
-// @namespace    http://tampermonkey.net/
+// @name         Doğrum Yılında Mouse tekerini Devre dışı bırak.
 // @version      1.0
 // @description  matinput type="number" öğelerinde fare tekeri ile değer değişimini engeller
 // @author       Rage17

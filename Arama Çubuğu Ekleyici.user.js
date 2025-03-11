@@ -1,8 +1,7 @@
 // ==UserScript==
-// @name         Mat-Select Searchable Dropdown (Sabit ve Otomatik Seçim)
-// @namespace    http://tampermonkey.net/
+// @name         Arama Çubuğu Ekleyici
 // @version      2.2
-// @description  Mat-Select dropdown'lara sabit bir arama kutusu ekler, Türkçe destekli arama yapar, kutuyu otomatik etkinleştirir ve ilk uygun seçeneği Enter ile seçer.
+// @description  Arama Çubuğu Ekleyici (Dropdown Menü) 
 // @author       Rage17
 // @match        *://*/*
 // @grant        none

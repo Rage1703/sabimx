@@ -1,6 +1,5 @@
 // ==UserScript==
-// @name         Müdavim Başvuru Takip Sistemi - Otomatik Tarih Seçici
-// @namespace    http://tampermonkey.net/
+// @name         Müdavim Başvuru Takip Sistemi - Otomatik
 // @version      2.0
 // @description  Telefon numarasına göre başlangıç ve bitiş tarihlerini otomatik doldurur, müdavim etiketi ekler (Dark Rider efekti). Tıklanınca tarihleri tekrar yükler.
 // @author       Rage17

@@ -1,6 +1,5 @@
 // ==UserScript==
-// @name         Highlight Specific Characters in Input
-// @namespace    http://tampermonkey.net/
+// @name         Son 4 Hane Renklendirici
 // @version      1.4
 // @description  Input alanındaki 8, 9, 10 ve 11. karakterlerin arka planını şeffaf kırmızı yapar (her türlü değişiklikte çalışır).
 // @author       Rage17

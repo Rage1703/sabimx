@@ -1,6 +1,5 @@
 // ==UserScript==
-// @name         Sabim Timer Synchronization with Smart Check
-// @namespace    http://tampermonkey.net/
+// @name         Şiddet Beyanı Dakika Sayacı ve Başlık seçici
 // @version      2.3
 // @description  Süre bilgisini senkronize eder, gereksiz veri çekmez ve takılmaları önler.
 // @author       Rage17

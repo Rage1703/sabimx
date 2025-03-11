@@ -1,6 +1,5 @@
 // ==UserScript==
 // @name         Müdavim Takip Sistemi 2. Numara
-// @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  Telefon numarasına göre tarihleri otomatik günceller, ancak numara butona basıldığında değişir.
 // @author       Rage17

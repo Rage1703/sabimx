@@ -1,6 +1,5 @@
 // ==UserScript==
-// @name         Sabim Tarih Değiştirici (2023, 2024, 2025)
-// @namespace    http://tampermonkey.net/
+// @name         Tarih Değiştirici (2023, 2024, 2025)
 // @version      1.3
 // @description  Tarih alanını belirlenen bir değere günceller (2023, 2024 ve 2025 butonları eklendi)
 // @author       Rage17

@@ -1,6 +1,5 @@
 // ==UserScript==
-// @name         Günlük Toplam Mola Hesaplayıcı (Butona Bağlı)
-// @namespace    http://tampermonkey.net/
+// @name         Mola Hesaplayıcı
 // @version      1.3
 // @description  Kısa mola ve yemek molası sürelerini toplayarak toplamın altına ekler, butona bağlı çalışır (sayfa yüklemesini beklemez).
 // @author       Rage17

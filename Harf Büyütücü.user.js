@@ -1,6 +1,5 @@
 // ==UserScript==
-// @name         Turkish Uppercase for Specific Textareas (Cursor Fix)
-// @namespace    http://tampermonkey.net/
+// @name         Harf Büyütücü (Otomatik)
 // @version      2.1
 // @description  Belirli textarea alanlarını Türkçe karakter desteğiyle büyük harfe çevirir ve imleç konumunu korur. Ayrıca textarea yüksekliğini artırır.
 // @author       Rage17

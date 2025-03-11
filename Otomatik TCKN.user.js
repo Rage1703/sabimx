@@ -1,8 +1,7 @@
 // ==UserScript==
-// @name         OTOMATİK AMBULANS VE HARF BÜYÜTÜCÜ
-// @namespace    http://tampermonkey.net/
+// @name         Otomatik TCKN Aktarıcı ve Ambulans Talebi Seçici
 // @version      2.1
-// @description  Textarea içinde veri girildikçe veya değişiklik oldukça TCKN: veya TC: verisini otomatik aktarır ve belirli ifadeler geçerse başvuru türü ve sebebini seçer.
+// @description  Textarea içinde veri girildikçe veya değişiklik oldukça TCKN: veya TC: verisini otomatik aktarır ve belirli ifadeler geçerse başvuru türü ve sebebini seçer.  
 // @author       Rage17
 // @match        https://sabim.sonitel.io/*
 // @grant        none
