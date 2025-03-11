@@ -3,7 +3,7 @@
 // @version      1.4
 // @description  Input alanındaki 8, 9, 10 ve 11. karakterlerin arka planını şeffaf kırmızı yapar (her türlü değişiklikte çalışır).
 // @author       Rage17
-// @match        https://sabim.sonitel.io/custom/sabim*
+// @match        https://sabim.sonitel.io/custom/sabim?MobileNumber=*
 // @grant        none
 // ==/UserScript==
 
