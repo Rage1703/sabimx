@@ -1,20 +1,20 @@
 {
     "scripts": [
         {
-            "name": "Günlük Toplam Mola Hesaplayıcı (Butona Bağlı)",
-            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Günlük Toplam Mola Hesaplayıcı (Butona Bağlı).user.js"
+            "name": "Arama Çubuğu Ekleyici",
+            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Arama Çubuğu Ekleyici.user.js"
         },
         {
-            "name": "Highlight Specific Characters in Input",
-            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Highlight%20Specific%20Characters%20in%20Input.user.js"
+            "name": "Doğrum Yılında Mouse tekerini Devre dışı bırak.",
+            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Doğrum Yılında Mouse tekerini Devre dışı bırak..user.js"
         },
         {
-            "name": "Mat-Select Searchable Dropdown (Sabit ve Otomatik Seçim)",
-            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Mat-Select Searchable Dropdown (Sabit ve Otomatik Seçim).user.js"
+            "name": "Harf Büyütücü",
+            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Harf Büyütücü.user.js"
         },
         {
-            "name": "Mouse tekerini Devre dışı bırak.",
-            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Mouse tekerini Devre dışı bırak..user.js"
+            "name": "Mola Hesaplayıcı",
+            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Mola Hesaplayıcı.user.js"
         },
         {
             "name": "Müdavim Başvuru Takip Sistemi - Otomatik Tarih Seçici",
@@ -25,24 +25,24 @@
             "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Müdavim Takip Sistemi 2. Numara.js"
         },
         {
-            "name": "OTOMATİK AMBULANS VE HARF BÜYÜTÜCÜ",
-            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/OTOMATİK AMBULANS VE HARF BÜYÜTÜCÜ.user.js"
-        },
-        {
-            "name": "Sabim Tarih Değiştirici (2023, 2024, 2025)",
-            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Sabim Tarih Değiştirici (2023, 2024, 2025).user.js"
-        },
-        {
-            "name": "Sabim Timer Synchronization with Smart Check",
-            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Sabim%20Timer%20Synchronization%20with%20Smart%20Check.user.js"
+            "name": "Otomatik TCKN",
+            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Otomatik%20TCKN.user.js"
         },
         {
             "name": "Sayfa Kapatma Uyarısı",
             "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Sayfa Kapatma Uyarısı.user.js"
         },
         {
-            "name": "Turkish Uppercase for Specific Textareas (Cursor Fix)",
-            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Turkish%20Uppercase%20for%20Specific%20Textareas%20(Cursor%20Fix).user.js"
+            "name": "Son 4 Hane Renklendirici",
+            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Son%204%20Hane%20Renklendirici.user.js"
+        },
+        {
+            "name": "Tarih Değiştirici (2023, 2024, 2025)",
+            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Tarih Değiştirici (2023, 2024, 2025).user.js"
+        },
+        {
+            "name": "Şiddet Beyanı Dakika Sayacı",
+            "url": "https://raw.githubusercontent.com/Rage1703/sabimx/main/Şiddet Beyanı Dakika Sayacı.user.js"
         }
     ]
 }
