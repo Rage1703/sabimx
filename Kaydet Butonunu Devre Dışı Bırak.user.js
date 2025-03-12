@@ -2,7 +2,7 @@
 // @name         Kaydet Butonunu Devre Dışı Bırak
 // @version      1.1
 // @description  Açıklama alanı boşken kaydet butonunu devre dışı bırakır.
-// @author       You
+// @author       Rage1703
 // @match        https://sabim.sonitel.io/custom/sabim?MobileNumber=*
 // @grant        none
 // ==/UserScript==
