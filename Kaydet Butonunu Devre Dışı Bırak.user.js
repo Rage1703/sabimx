@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Kaydet Butonunu Devre Dışı Bırak
 // @version      1.1
-// @description  Prevent specific button click until textarea has text
+// @description  Açıklama alanı boşken kaydet butonunu devre dışı bırakır.
 // @author       You
 // @match        https://sabim.sonitel.io/custom/sabim?MobileNumber=*
 // @grant        none
