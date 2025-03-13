@@ -1,0 +1,556 @@
+# espanso match file
+
+# For a complete introduction, visit the official docs at: https://espanso.org/docs/
+
+# You can use this file to define the base matches (aka snippets)
+# that will be available in every application when using espanso.
+
+# Matches are substitution rules: when you type the "trigger" string
+# it gets replaced by the "replace" string.
+matches:
+  # Simple text replacement
+  - trigger: ":espanso"
+    replace: "Hi there!"
+
+  # NOTE: espanso uses YAML to define matches, so pay attention to the indentation!
+
+  # But matches can also be dynamic:
+
+  # Print the current date
+  #BUGÜN
+  - trigger: "XX"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%d.%m.%Y TARİHİNDE"
+          #BUGÜN
+  - trigger: "BUGÜN"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%d.%m.%Y TARİHİNDE"
+#DÜN
+  - trigger: "DÜN"
+    replace: "{{yesterday}}"
+    vars:
+      - name: yesterday
+        type: shell
+        params:
+          cmd: "powershell -NoProfile -ExecutionPolicy Bypass -Command \"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; (Get-Date).AddDays(-1).ToString('dd.MM.yyyy') + ' TARİHİNDE'\""
+
+  - trigger: "YARIN"
+    replace: "{{tomorrow}}"
+    vars:
+      - name: tomorrow
+        type: shell
+        params:
+          cmd: "powershell -NoProfile -ExecutionPolicy Bypass -Command \"[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; (Get-Date).AddDays(+1).ToString('dd.MM.yyyy') + ' TARİHİNDE'\""
+
+    
+  # Print the output of a shell command
+  - trigger: ":shell"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "echo 'Hello from your shell'"
+
+  # And much more! For more information, visit the docs: https://espanso.org/docs/
+#Mail kalıpları. 
+  - trigger: "hdm"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "Merhaba Fatma hanım.\n\n%d.%m.%Y tarihli nolu başvuruda görüşme başında anons verildi. Ses alınamadı. Başvuru sahibi hattan düştü.\n\nBilgilerinize. İyi çalışmalar."
+ 
+          #
+  - trigger: "bhdm"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%d.%m.%Y tarihli nolu başvuruda yaşanan sorun."
+#
+  - trigger: "3kezan"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "Merhaba Fatma hanım.\n\n%d.%m.%Y tarihli nolu başvuruda başvuru sahibinden ses alınamadığı içi 3 kez anons verildikten sonra görüşme tarafımca sonlandırıldı.\n\nBilgilerinize. İyi çalışmalar."
+
+#KISALTMALAR
+  - trigger: "TC"
+    replace: "(TCKN: YAŞ:)"
+
+
+  - trigger: "POLİ"
+    replace: "POLİKLİNİĞİ"
+  - trigger: "ENJ"
+    replace: "ENJEKSİYON"
+  - trigger: "HATTANDÜŞME"
+    replace: "ANONS VERİLDİ. SES ALINAMADI. BAŞVURU SAHİBİ HATTAN DÜŞTÜ."
+
+  - trigger: "YÖNRAN"
+    replace: "DEVLET HASTANESİNDEN RANDEVU ALMAK İSTEYEN BAŞVURU SAHİBİNE 182 MHRS HATTI, MHRS PORTAL VE E-NABIZ ÜZERİNDEN RANDEVU ALMAYI DENEYEBİLECEĞİ BİLGİSİ İLETİLDİ."
+  - trigger: "RANİPTAL"
+    replace: "RANDEVUSUNU İPTAL ETMEK İSTEYEN BAŞVURU SAHİBİNE 182 MHRS HATTI, MHRS PORTAL VE E-NABIZ ÜZERİNDEN RANDEVUSUNU İPTAL EDEBİLECEĞİ BİLGİSİ İLETİLDİ."
+  - trigger: "RANONAY"
+    replace: "RANDEVUSUNU ONAYLATMAK İSTEYEN BAŞVURU SAHİBİNE 182 MHRS HATTI, MHRS PORTAL VE E-NABIZ ÜZERİNDEN RANDEVUSUNU ONAYLATMA İŞLEMİNİ GERÇEKLEŞTİREBİLECEĞİ BİLGİSİ İLETİLDİ."
+
+  - trigger: "YÖNANK"
+    replace: '"184 SABİM TARAFINDAN ARANDIM. DAHA ÖNCE BAŞVURU KAYDI BIRAKMADIM." DİYEN BAŞVURU SAHİBİNE 20.11.2024 TARİHİ İTİBARİ İLE BİRİMİMİZ TARAFINDAN AYAKTA HASTA MEMNUNİYET ANKETİ AİLE SAĞLIĞI MERKEZİ (ASM) ANKETİ YAPILDIĞI, BU NEDENLE ARANMIŞ OLABİLECEĞİ BİLGİSİ İLETİLDİ.'
+  - trigger: "YANK"
+    replace: '"184 SABİM TARAFINDAN ARANDIM. DAHA ÖNCE BAŞVURU KAYDI BIRAKMADIM." DİYEN BAŞVURU SAHİBİNE 20.11.2024 TARİHİ İTİBARİ İLE BİRİMİMİZ TARAFINDAN AYAKTA HASTA MEMNUNİYET ANKETİ AİLE SAĞLIĞI MERKEZİ (ASM) ANKETİ YAPILDIĞI, BU NEDENLE ARANMIŞ OLABİLECEĞİ BİLGİSİ İLETİLDİ.'
+  - trigger: "YÖN 144"
+    replace: "BAŞVURU SAHİBİNE 144 AİLE VE SOSYAL HİZMETLER BAKANLIĞIİLE GÖRÜŞME SAĞLAYABİLECEĞİ BİLGİSİ İLETİLDİ."
+  - trigger: "DİYEN 144"
+    replace: "DİYEN BAŞVURU SAHİBİNE 144 AİLE VE SOSYAL HİZMETLER BAKANLIĞIİLE GÖRÜŞME SAĞLAYABİLECEĞİ BİLGİSİ İLETİLDİ."
+  - trigger: "YÖN170"
+    replace: "BAŞVURU SAHİBİNE 170 ÇHİM İLE GÖRÜŞME SAĞLAYABİLECEĞİ BİLGİSİ İLETİLDİ."
+
+
+  - trigger: "KONBİR"
+    replace: "KONUNUN BİRİMİNİZ TARAFINDAN İNCELENMESİNİ İSTİYORUM."
+  - trigger: "konbir"
+    replace: "KONUNUN BİRİMİNİZ TARAFINDAN İNCELENMESİNİ İSTİYORUM."
+  - trigger: "KONGER"
+    replace: "KONUNUN BİRİMİNİZ TARAFINDAN İNCELENEREK GEREĞİNİN YAPILMASINI İSTİYORUM."
+  - trigger: "SORUNUN ÇÖZ"
+    replace: "SORUNUN ÇÖZÜLMESİNİ İSTİYORUM."
+  - trigger: "SONÇÖZ"
+    replace: "SORUNUN ÇÖZÜLMESİNİ İSTİYORUM."
+  - trigger: "sonçöz"
+    replace: "SORUNUN ÇÖZÜLMESİNİ İSTİYORUM."
+  - triggers: ["DİYEN B", "DİYENB"]
+    replace: "DİYEN BAŞVURU SAHİBİ"
+
+
+  - trigger: "KİŞİSEL BİLGİ"
+    replace: "KİŞİSEL BİLGİLERİMİN GİZLENEREK KONUNUN BİRİMİNİZ TARAFINDAN İNCELENMESİNİ İSTİYORUM."
+
+  - trigger: "BBİLGİ"
+    replace: "BİRİMİNİZ ARACILIĞI İLE BİLGİ ALMAK İSTİYORUM."
+
+  - trigger: "BYARDIM"
+    replace: "BİRİMİNİZ ARACILIĞI İLE YARDIM TALEP EDİYORUM."
+
+  - trigger: "BAMB"
+    replace: "BİRİMİNİZ ARACILIĞI İLE AMBULANS TALEP EDİYORUM."
+   
+  - trigger: "BSEVK"
+    replace: "BİRİMİNİZ ARACILIĞI İLE SEVK TALEP EDİYORUM."
+
+  - trigger: "BTEŞEKKÜR"
+    replace: "BİRİMİNİZ ARACILIĞI İLE TEŞEKKÜRLERİMİ İLETMEK İSTİYORUM." 
+
+  - trigger: "ŞİDDET "
+    replace: "ŞİDDET BEYANI:"
+
+  - trigger: "BAĞLIO"
+    replace: "BAĞLI OLDUĞUM AİLE SAĞLIĞI MERKEZİ"  
+
+  - trigger: "TAVIRLARINDAN"
+    replace: "TAVIRLARINDAN RAHATSIZ OLDUM" 
+  - trigger: "HEKİMİN TAVIR"
+    replace: "HEKİMİN TAVIRLARINDAN RAHATSIZ OLDUM" 
+  - trigger: "PERSONELİN TAVIR"
+    replace: "PERSONELİN TAVIRLARINDAN RAHATSIZ OLDUM" 
+  - trigger: "HEKİMLERİN TAVIR"
+    replace: "HEKİMLERİN TAVIRLARINDAN RAHATSIZ OLDUM" 
+  - trigger: "PERSONELLERİN TAVIR"
+    replace: "PERSONELLERİN TAVIRLARINDAN RAHATSIZ OLDUM" 
+
+  - trigger: "BU İŞLEMİN"
+    replace: "BU İŞLEMİN YASAL OLUP OLMADIĞI HAKKINDA BİRİMİNİZ ARACILIĞI İLE BİLGİ ALMAK İSTİYORUM." 
+  - trigger: "BU ÜCRETİN Y"
+    replace: "BU ÜCRETİN YASAL OLUP OLMADIĞI HAKKINDA BİRİMİNİZ ARACILIĞI İLE BİLGİ ALMAK İSTİYORUM." 
+ 
+  - trigger: "2025"
+    replace: "2025 TARİHİNDE"
+  - trigger: "2024"
+    replace: "2024 TARİHİNDE" 
+  - trigger: "2023"
+    replace: "2023 TARİHİNDE" 
+
+  - trigger: "yaşson"
+    replace: "yaşanan sorun." 
+  - trigger: "YAŞSON"
+    replace: "yaşanan sorun." 
+
+
+  - trigger: "BİLGİAL"
+    replace: "BİRİMİNİZE BIRAKTIĞIM BAŞVURUM HAKKINDA BİLGİ ALMAK İSTİYORUM."
+
+  - trigger: "D.R"
+    replace: "DR. "
+
+  - trigger: "DR "
+    replace: "DR. "
+ 
+  - trigger: "DT"
+    replace: "DT. "
+
+  - trigger: "ENABIZ"
+    replace: "E-NABIZ"
+  - trigger: "EDEVLET"
+    replace: "E-DEVLET"
+  - trigger: "ÇÖZ-"
+    replace: "ÇÖZ-GER"
+
+  - trigger: "AMBULASN"
+    replace: "AMBULANS"
+  - trigger: "HAKKIDNA"
+    replace: "HAKKINDA"
+
+    
+  - trigger: "BAŞH"
+    replace: "BAŞHEKİM"
+  - trigger: "HEKİMİN ÇAL"
+    replace: "HEKİMİN ÇALIŞMA PLANINDA YAŞANAN ZORUNLU BİR DEĞİŞİKLİK SEBEBİ İLE İPTAL EDİLDİĞİ"
+
+  - trigger: "YARDIM TAL"
+    replace: "YARDIM TALEP EDİYORUM."
+
+  - trigger: "BAVŞURDUM"
+    replace: "BAŞVURDUM"
+  - trigger: "MÜŞEHADE"
+    replace: "MÜŞAHADE"
+ 
+
+  - trigger: "182 "
+    replace: "182 MHRS HATTI"
+  - trigger: "184 "
+    replace: "184 SABİM"  
+  - trigger: "170 "
+    replace: "170 ÇHİM"  
+  - trigger: "144 "
+    replace: "144 AİLE VE SOSYAL HİZMETLER BAKANLIĞI"  
+  - trigger: "174 "
+    replace: "174 ALO GIDA"
+  - trigger: "175 "
+    replace: "175 TÜKETİCİ HAKLARI"
+ 
+
+  - trigger: "DİYEN 170"
+    replace: "DİYEN BAŞVURU SAHİBİNE 170 ÇHİM İLE GÖRÜŞME SAĞLAYABİLECEĞİ BİLGİSİ İLETİLDİ."
+  - trigger: "YÖNENBIZ"
+    replace: "DİYEN BAŞVURU SAHİBİNE BAŞVURU SAHİBİNE E-NABIZ İLETİŞİM MERKEZİNİN 0850 240 0303 İLETİŞİM NUMARASI İLE GÖRÜŞME SAĞLAYABİLECEĞİ BİLGİSİ İLETİLDİ."
+
+  - trigger: "YNABIZ"
+    replace: "BAŞVURU SAHİBİNE E-NABIZ İLETİŞİM MERKEZİNİN 0850 240 0303 İLETİŞİM NUMARASI İLE GÖRÜŞME SAĞLAYABİLECEĞİ BİLGİSİ İLETİLDİ."
+  - trigger: "YEVDES"
+    replace: " BAŞVURU SAHİBİNE EVDE SAĞLIK HİZMETLERİNİN 444 38 33 NOLU İLETİŞİM HATTI İLE GÖRÜŞME SAĞLAYABİLECEĞİ BİLGİSİ İLETİLDİ."
+ 
+
+  - trigger: "18YAŞBAŞ"
+    replace: "DİYEN BAŞVURU SAHİBİNİN KAYDI OLUŞTURULDUĞU SIRADA 18 YAŞINDAN KÜÇÜK OLDUĞU ANLAŞILDIĞI İÇİN KENDİ ADINA BAŞVURU KAYDI OLUŞTURULAMAYACAĞI BİLGİSİ İLETİLDİ. BAŞVURU SAHİBİNİN YANINDA BİR YAKINI OLMADIĞI İÇİN DAHA SONRA BİRİMİMİZİ ARAYARAK BAŞVURU KAYDI OLUŞTURABİLECEĞİ BİLGİSİ İLETİLDİ."   
+  
+  - trigger: "BİRİMİMİZDE DANIŞ"
+    replace: "BİRİMİMİZDE DANIŞMAN HEKİM BULUNMADIĞI İÇİN TIBBİ BİLGİLENDİRME YAPILAMADIĞI KONU İLE İLGİLİ BİR HEKİME VEYE EN YAKIN SAĞLIK KURULUŞUNA BAŞVURABİLECEĞİ, ACİL DURUMLARDA HASTANELERİN ACİL SERVİSLERİ VE 112'DEN DESTEK ALMAYI DENEYEBİLECEĞİ BİLGİSİ İLETİLDİ."
+  
+  - trigger: "ANCAK RAN"
+    replace: "ANCAK RANDEVU BULAMIYORUM."   
+  - trigger: "ASM YAP"
+    replace: '"ASM SORGULAMASI YAPILDI."'
+  - trigger: "ASMYAP"
+    replace: '"ASM SORGULAMASI YAPILDI."'
+  - trigger: "ASM SORGU"
+    replace: '"ASM SORGULAMASI SİSTEM SORUNU SEBEBİ İLE YAPILAMADI."'
+  - trigger: "BAŞVURU SAHİBİ HATTAN DÜŞTÜĞÜ İÇİN"
+    replace: "BAŞVURU SAHİBİ HATTAN DÜŞTÜĞÜ İÇİN TCKN, DOĞUM YILI VE ALTERNATİF NO BİLGİSİ SORGULANAMADI." 
+  - trigger: "BAŞDÜŞTÜ"
+    replace: "BAŞVURU SAHİBİ HATTAN DÜŞTÜ VEYA GÖRÜŞMEYİ TEK TARAFLI OLARAK SONLANDIRDI."
+  
+  
+  - trigger: "3 KEZ ANONS" 
+    replace: "BAŞVURU SAHİBİ GÖRÜŞME SONUNDA GÖRÜŞMEYİ SONLANDIRMADI. 3 KEZ ANONS VERİLDİKTEN SONRA GÖRÜŞME TARAFIMCA SONLANDIRILDI."
+  - trigger: "SORUNUN DE"
+    replace: "SORUNUN DEVAMI HALİNDE BİRİMİMİZİ TEKRAR ARAYARAK BAŞVURU KAYDI OLUŞTURABİLECEĞİ BİLGİSİ İLETİLDİ."
+  - trigger: "RADAL"
+    replace: "RANDEVU ALMAYA ÇALIŞIYORUM ANCAK RANDEVU BULAMIYORUM." 
+
+  - trigger: "ONBEŞRAN"
+    replace: "TEKRAR RANDEVU ALMAK İSTEDİĞİMDE RANDEVUYA GİTMEDİĞİM GÖZÜKTÜĞÜ İÇİN 15 GÜN BOYUNCA RANDEVU VERİLMİYOR."
+
+  - trigger: "15GÜNSÖZ"
+    replace: "RANDEVUYA GİTMEDİĞİM GÖZÜKTÜĞÜ İÇİN 15 GÜN BOYUNCA RANDEVU ALAMAMAM SÖZ KONUSU." 
+  - trigger: "15GÜNVER"
+    replace: "RANDEVUYA GİTMEDİĞİM GÖZÜKTÜĞÜ İÇİN 15 GÜN BOYUNCA RANDEVU VERİLMİYOR." 
+  - trigger: "15GÜNRAN"
+    replace: "RANDEVUYA GİTMEDİĞİM GÖZÜKTÜĞÜ İÇİN 15 GÜN BOYUNCA RANDEVU VERİLMİYOR."   
+  - trigger: "OPBİLGİ"
+    replace: "DİYEN BAŞVURU SAHİBİNE KONU HAKKINDA ANLIK BİLGİ AKTARILAMAYACAĞI ANCAK DİLERSE BİLGİ ALMA TALEBİ DOĞRLTUSUNDA BAŞVURU KAYDI OLUŞTURULABİLECEĞİ BİLGİSİ İLETİLDİ. BAŞVURU SAHİBİ KAYIT OLUŞTURMAK İSTEMEDİ."   
+  - trigger: "ANLIKBİLGİ"
+    replace: "DİYEN BAŞVURU SAHİBİNE KONU HAKKINDA ANLIK BİLGİ AKTARILAMAYACAĞI ANCAK DİLERSE BİLGİ ALMA TALEBİ DOĞRLTUSUNDA BAŞVURU KAYDI OLUŞTURULABİLECEĞİ BİLGİSİ İLETİLDİ. BAŞVURU SAHİBİ KAYIT OLUŞTURMAK İSTEMEDİ."   
+  - trigger: "TEKRAR RAND"
+    replace: "TEKRAR RANDEVU ALMAK İSTEDİĞİMDE"  
+  - trigger: "ALT NO"
+    replace: "ALT NO BAŞVURU SAHİBİ"
+  - trigger: "NOLU İLE"
+    replace: "NOLU İLETİŞİM HATTI"
+  - trigger: "İLEGÖR"
+    replace: "İLE GÖRÜŞME SAĞLAYABİLECEĞİ BİLGİS İLETİLDİ."
+
+  - trigger: "MESAJ İÇ"
+    replace: "MESAJ İÇERİĞİNDEKİ KİŞİYİ TANIMIYORUM VE KURUMA HİÇ BAŞVURMADIM."
+    
+                                
+    #YAZIM HATALARI  
+  - trigger: "KOLESTROL"
+    replace: "KOLESTEROL"
+  - trigger: "ALZH"
+    replace: "ALZHEİMER"
+  - trigger: "REÇETEE"
+    replace: "REÇETE"
+  - trigger: "OLRAK"
+    replace: "OLARAK"
+  - trigger: "OLARKA"
+    replace: "OLARAK"
+  - trigger: "İSTİYOTUZ"
+    replace: "İSTİYORUZ" 
+  - trigger: "HASTANAEİSNE"
+    replace: "HASTANESİNE"
+  - trigger: "VEİRLİYOR"
+    replace: "VERİLİYOR"
+  - trigger: "EİDLMESİNİ"
+    replace: "EDİLMESİNİ"
+  - trigger: "İLGİLŞ "
+    replace: "İLGİLİ "
+  - trigger: "SEBEB "
+    replace: "SEBEBİ "
+  - trigger: " RHAT"
+    replace: "RAHAT"
+  - trigger: " ULTR"
+    replace: "ULTRASON"
+  - trigger: " ENG"
+    replace: " ENGELLİ"
+  - trigger: "TETKİT"
+    replace: "TETKİK"
+  - trigger: "RAPRO"
+    replace: "RAPOR"
+  - trigger: "SEBBEİ"
+    replace: "SEBEBİ"
+  - trigger: "SEBEBEİ"
+    replace: "SEBEBİ"
+  - trigger: "SEBEBŞ"
+    replace: "SEBEBİ"
+  - trigger: "İÇŞN"
+    replace: "İÇİN"
+  - trigger: "YAPILACĞAI"
+    replace: "YAPILACAĞI"    
+  - trigger: "ÇALIŞŞIYORUM"
+    replace: "ÇALIŞIYORUM"  
+  - trigger: "BIRAKTIĞM"
+    replace: "BIRAKTIĞIM"   
+  - trigger: "TİROD"
+    replace: "TİROiD"  
+  - trigger: "İLÇA"
+    replace: "İLAÇ"
+  - trigger: "ZATÜRE"
+    replace: "ZATÜRRE"
+
+
+  - trigger: "KÜVEZ"
+    replace: "KÜVÖZ"
+  - trigger: " RNAD"
+    replace: " RAND "
+  - trigger: "GELMEMZİ"
+    replace: "GELMEMİZ"
+  - trigger: "RÖNT"
+    replace: "RÖNTGEN"  
+  - trigger: "KOLONO"
+    replace: "KOLONOSKOPİ"
+  - trigger: "ENDOS"
+    replace: "ENDOSKOPİ"
+  - trigger: "ULTRASYON"
+    replace: "ULTRASON"
+    
+
+  - trigger: "GERGER"
+    replace: "BAŞVURUM HAKKINDA GERİ DÖNÜŞ TALEP EDİYORUM."
+  - trigger: "EKGER"
+    replace: "BAŞVURUM HAKKINDA TARAFIMA GERİ DÖNÜŞ SAĞLANMADI. BAŞVURUM HAKKINDA GERİ DÖNÜŞ TALEP EDİYORUM."
+  - trigger: "SABGER"
+    replace: "184 SABİM TARAFINDAN ARANDIM. TELEFONU AÇAMADIM. BAŞVURUM HAKKINDA GERİ DÖNÜŞ TALEP EDİYORUM."
+
+ # HASTANELER
+#ANKARA 
+  - trigger: "ETLİKŞ"
+    replace: "ANKARA ETLİK ŞEHİR HASTANESİ"
+  - trigger: "ETLİK Ş"
+    replace: "ANKARA ETLİK ŞEHİR HASTANESİ"
+  - trigger: "BİLKENT"
+    replace: "ANKARA BİLKENT ŞEHİR HASTANESİ"
+  - trigger: "ANKARA ONK"
+    replace: "ANKARA DR. ABDURRAHMAN YURTASLAN ANKARA ONKOLOJİ EĞİTİM VE ARAŞTIRMA HASTANESİ"
+  - trigger: "ABDURRAHMAN YURTASLAN"
+    replace: "ANKARA DR. ABDURRAHMAN YURTASLAN ANKARA ONKOLOJİ EĞİTİM VE ARAŞTIRMA HASTANESİ"
+
+#İSTANBUL 
+  - trigger: "ÇAPATIP"
+    replace: "İSTANBUL ÜNİVERSİTESİ TIP FAKÜLTESİ"
+  - trigger: "ÇAPA TIP"
+    replace: "İSTANBUL ÜNİVERSİTESİ TIP FAKÜLTESİ"  
+  - trigger: "SAKURA"
+    replace: "İSTANBUL BAŞAKŞEHİR ÇAM VE SAKURA ŞEHİR HASTANESİ"  
+  - trigger: "ZEYNEP KAMİL"
+    replace: "İSTANBUL ZEYNEP KAMİL KADIN VE ÇOCUK HASTALIKLARI EĞİTİM VE ARAŞTIRMA HASTANESİ"
+  - trigger: "SADİ K"
+    replace: "İSTANBUL BAKIRKÖY DR. SADİ KONUK EĞİTİM VE ARAŞTIRMA HASTANESİ"
+  - trigger: "CEMİLTAŞ"
+    replace: "İSTANBUL PROF. DR. CEMİL TAŞCIOĞLU ŞEHİR HASTANESİ"
+  - trigger: "OKMEYDAN"
+    replace: "İSTANBUL PROF. DR. CEMİL TAŞCIOĞLU ŞEHİR HASTANESİ"
+  - trigger: "HASEKİ"
+    replace: "İSTANBUL HASEKİ EĞİTİM VE ARAŞTIRMA HASTANESİ"
+  - trigger: "HASSULTAN"
+    replace: "İSTANBUL HASEKİ EĞİTİM VE ARAŞTIRMA HASTANESİ SULTANGAZİ HASEKİ YERLEŞKESİNDE" 
+  - triggers: ["İLHANV", "İLVAN V"] 
+    replace: "İSTANBUL SANCAKTEPE ŞEHİT PROF. DR. İLHAN VARANK EĞİTİM VE ARAŞTIRMA HASTANESİ"
+    
+  - trigger: "FERİHA ÖZ"
+    replace: "İSTANBUL SANCAKTEPE ŞEHİT PROF.DR. İLHAN VARANK EĞİTİM VE ARAŞTIRMA HASTANESİ PROF. DR. FERİHA ÖZ ACİL DURUM HASTANESİ"
+  - trigger: "FERİHAÖZ"
+    replace: "İSTANBUL SANCAKTEPE ŞEHİT PROF.DR. İLHAN VARANK EĞİTİM VE ARAŞTIRMA HASTANESİ PROF. DR. FERİHA ÖZ ACİL DURUM HASTANESİ"
+  - trigger: "LÜTFİ K"
+    replace: "İZMİR KARTAL DR. LÜTFİ KIRDAR ŞEHİR HASTANESİ"
+  - trigger: "KARTAL L"
+    replace: "İZMİR KARTAL DR. LÜTFİ KIRDAR ŞEHİR HASTANESİ"
+
+
+
+
+#İZMİR
+  - triggers: ["ÇİĞLİ E", "İZMİR ÇİĞLİ"] 
+    replace: "İZMİR BAKIRÇAY ÜNİVERSİTESİ ÇİĞLİ EĞİTİM VE ARAŞTIRMA HASTANESİ"
+    regex: true  # Regex modunu aç
+
+
+  - trigger: "İZMİRŞ"
+    replace: "İZMİR ŞEHİR HASTANESİ"
+  - trigger: "İZMİR Ş"
+    replace: "İZMİR ŞEHİR HASTANESİ"
+
+
+
+
+  - trigger: "ADANAŞ"
+    replace: "ADANA ŞEHİR EĞİTİM VE ARAŞTIRMA HASTANESİ"
+  - trigger: "ADANA Ş"
+    replace: "ADANA ŞEHİR EĞİTİM VE ARAŞTIRMA HASTANESİ"
+  
+  - trigger: "FETHİS"
+    replace: "ELAZIĞ FETHİ SEKİN ŞEHİR HASTANESİ"
+  
+  - trigger: "HASEKİ"
+    replace: "İSTANBUL HASEKİ EĞİTİM VE ARAŞTIRMA HASTANESİ"
+  - trigger: "HASSULTAN"
+    replace: "İSTANBUL HASEKİ EĞİTİM VE ARAŞTIRMA HASTANESİ SULTANGAZİ HASEKİ YERLEŞKESİNDE"     
+  - trigger: "KONYA Ş"
+    replace: "KONYA ŞEHİR HASTANESİ"
+
+  - trigger: "GAZİŞEHİR"
+    replace: "GAZİANTEP ŞEHİR HASTANESİ"
+  - trigger: "VAN BÖL"
+    replace: "VAN EĞİTİM VE ARAŞTIRMA HASTANESİ"   
+ 
+  - triggers: ["BURSA Y","ŞEVKET YIL"]
+    replace: "BURSA YÜKSEK İHTİSAS EĞİTİM VE ARAŞTIRMA HASTANESİ"
+
+  - trigger: "BURSA ŞE"
+    replace: "BURSA ŞEHİR HASTANESİ"
+
+# POLİKLİNİKLER
+  - trigger: "KARDİ"
+    replace: "KARDİYOLOJİ POLİKLİNİĞİ"
+  - trigger: "ORTOP"
+    replace: "ORTOPEDİ POLİKLİNİĞİ"
+  - trigger: "ÇOCUK GA"
+    replace: "ÇOCUK GASTROENTEROLOJİ POLİKLİNİĞİ"      
+  - trigger: "BEYİN VE"
+    replace: "BEYİN VE SİNİR CERRAHİ POLİKLİNİĞİ"  
+  - trigger: "GASTR"
+    replace: "GASTROENTEROLOJİ POLİKLİNİĞİ"  
+  - trigger: "ALGO"
+    replace: "ALGOLOJİ POLİKLİNİĞİ"
+  - trigger: "ÇOCUK HAS"
+    replace: "ÇOCUK HASTALIKLARI POLİKLİNİĞİ"
+  - trigger: "ENFE"
+    replace: "ENFEKSİYON"
+  - trigger: "GENEL C"
+    replace: "GENEL CERRAHİ POLİKLİNİĞİ"
+  - trigger: "GÖĞÜS H"
+    replace: "GÖĞÜS HASTALIKLARI POLİKLİNİĞİ"
+  - trigger: "KADIN H"
+    replace: "KADIN HASTALIKLARI POLİKLİNİĞİ"
+  - trigger: "GÖZ H"
+    replace: "GÖZ HASTALIKLARI POLİKLİNİĞİ"  
+  - trigger: "NÖRO"
+    replace: "NÖROLOJİ POLİKLİNİĞİ"
+  - trigger: "ÜROL"
+    replace: "ÜROLOJİ POLİKLİNİĞİ"    
+  - trigger: "ENDOD"
+    replace: "ENDODONTİ POLİKLİNİĞİ"
+  - trigger: "ORTOD"
+    replace: "ORTODONTİ POLİKLİNİĞİ"
+  - trigger: "ENDOK"
+    replace: "ENDOKRİNOLOJİ POLİKLİNİĞİ"
+  - trigger: "ÇOCUK ENDOK"
+    replace: "ÇOCUK ENDOKRİNOLOJİ POLİKLİNİĞİ"
+  - trigger: "ÇOCUK KARD"
+    replace: "ÇOCUK KARDİYOLOJİ POLİKLİNİĞİ"
+  - trigger: "PSİKİ"
+    replace: "PSİKİYATRİ POLİKLİNİĞİ"
+  - trigger: "ROMAT"
+    replace: "ROMATOLOJİ POLİKLİNİĞİ"
+  - trigger: "HEMAT"
+    replace: "HEMATOLOJİ POLİKLİNİĞİ"
+  - trigger: "İMMÜ"
+    replace: "İMMÜNOLOJİ POLİKLİNİĞİ"
+  - trigger: "İMÜ"
+    replace: "İMMÜNOLOJİ POLİKLİNİĞİ"
+  - trigger: "GENEL Dİ"
+    replace: "GENEL DİŞ POLİKLİNİĞİ"
+  - trigger: "AĞIZ VE"
+    replace: "AĞIZ VE ÇENE CERRAHİ POLİKLİNİĞİ"
+  - trigger: "KALP VE D"
+    replace: "KALP VE DAMAR CERRAHİ POLİKLİNİĞİ"
+  - trigger: "PERİNA"
+    replace: "PERİNATOLOJİ POLİKLİNİĞİ"
+
+
+    #HASTALIKLAR VE TIBBİ TERİMLER
+  - triggers: ["TETENOZ", "TETANOZ"]
+    replace: "TETANOS"
+  - trigger: "ANKİL"
+    replace: "ANKİLOZAN SPONDİLİT"
+  - trigger: "TROİD"
+    replace: "TİROİD"
+  - trigger: "TİROYİD"
+    replace: "TİROİD"
+
+
+    ############################
+
+  - trigger: "ŞUAN"
+    replace: "SAAT {{mytime}}"
+    vars:
+      - name: shellcmd
+        type: shell
+        params:
+          cmd: echo "%H.%M"
+      - name: mytime
+        type: date
+        params:
+          format: "{{shellcmd}}"
+
+
