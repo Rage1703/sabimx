@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Otomatik TCKN Aktarıcı ve Ambulans Talebi Seçici
+// @name         Otomatik Başlık seçimi ve TCKN
 // @version      2.1
-// @description  Textarea içinde veri girildikçe veya değişiklik oldukça TCKN: veya TC: verisini otomatik aktarır ve belirli ifadeler geçerse başvuru türü ve sebebini seçer.  
-// @author       Rage17
+// @description  Textarea içinde veri girildikçe veya değişiklik oldukça TCKN: veya TC: verisini otomatik aktarır ve belirli ifadeler geçerse başvuru türü ve sebebini seçer.
+// @author       Your Name
 // @match        https://sabim.sonitel.io/*
 // @grant        none
 // ==/UserScript==
@@ -122,9 +122,56 @@
         }
     }
 
+    function checkForFeeInformationRequest() {
+        const textarea = document.querySelector('#mat-input-15');
+        if (!textarea) return;
+
+        const text = textarea.value;
+        const feeInformationKeywords = [
+            "BU ÜCRETİN YASAL OLUP OLMADIĞI HAKKINDA BİRİMİNİZ ARACILIĞI İLE BİLGİ ALMAK İSTİYORUM.",
+            "ÜCRETLER HAKKINDA BİLGİ ALMAK İSTİYORUM."
+        ];
+
+        if (feeInformationKeywords.some(keyword => text.includes(keyword))) {
+            console.log("Ücret bilgisi talebi tespit edildi, seçim yapılıyor...");
+
+            // Başvuru türü seçilmemişse "BİLGİ ALMA" ve "Sağlık Hizmeti Ücretlendirmeleri" seçeneklerini otomatik seç
+            if (!getSelectedOption('Başvuru Türü')) {
+                selectDropdownOption('Başvuru Türü', 'BİLGİ ALMA', () => {
+                    selectDropdownOption('Başvuru Sebebi', 'Sağlık Hizmeti Ücretlendirmeleri');
+                });
+            }
+        }
+    }
+
+    function checkForHealthWorkerActionRequest() {
+        const textarea = document.querySelector('#mat-input-15');
+        if (!textarea) return;
+
+        const text = textarea.value;
+        const actionKeywords = [
+            "EYLEMDE OLMASI SEBEBİ İLE",
+            "EYLEMDE OLDUĞU İÇİN",
+            "EYLEMDE OLMASI SEBEBİYLE"
+        ];
+
+        if (actionKeywords.some(keyword => text.includes(keyword))) {
+            console.log("Sağlık çalışanı eylemi talebi tespit edildi, seçim yapılıyor...");
+
+            // Başvuru türü seçilmemişse "SAĞLIK ÇALIŞANI EYLEMİ" ve "SAĞLIK ÇALIŞANI EYLEMİ" seçeneklerini otomatik seç
+            if (!getSelectedOption('Başvuru Türü')) {
+                selectDropdownOption('Başvuru Türü', 'SAĞLIK ÇALIŞANI EYLEMİ', () => {
+                    selectDropdownOption('Başvuru Sebebi', 'SAĞLIK ÇALIŞANI EYLEMİ');
+                });
+            }
+        }
+    }
+
     const observer = new MutationObserver(() => {
         updateTcField();
         checkForAmbulanceRequest();
+        checkForFeeInformationRequest(); // Yeni özellik ekleniyor
+        checkForHealthWorkerActionRequest(); // Yeni özellik ekleniyor
     });
     const config = { childList: true, subtree: true, characterData: true };
 
@@ -146,6 +193,8 @@
         setTimeout(() => {
             updateTcField();
             checkForAmbulanceRequest();
+            checkForFeeInformationRequest(); // Yeni özellik ekleniyor
+            checkForHealthWorkerActionRequest(); // Yeni özellik ekleniyor
             startScanning();
         }, scanningInterval);
     }
