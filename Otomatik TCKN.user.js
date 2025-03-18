@@ -2,7 +2,7 @@
 // @name         Otomatik Başlık seçimi ve TCKN
 // @version      2.1
 // @description  Textarea içinde veri girildikçe veya değişiklik oldukça TCKN: veya TC: verisini otomatik aktarır ve belirli ifadeler geçerse başvuru türü ve sebebini seçer.
-// @author       Your Name
+// @author       Rage17
 // @match        https://sabim.sonitel.io/*
 // @grant        none
 // ==/UserScript==
@@ -15,7 +15,41 @@
     let isFirstInput = true;
     let textAreaClicked = false;
     let ambulanceSelectedCount = 0; // Ambulans başvuru türü seçilme sayısı
+    let animationResetTimeout;
+    let isAnimationReset = false;
 
+    // Dropdown animasyonlarını sıfırlamak
+    function disableDropdownAnimations() {
+        const dropdowns = document.querySelectorAll('mat-select');
+        dropdowns.forEach(dropdown => {
+            dropdown.style.transition = 'none'; // Animasyonu kapatıyoruz
+        });
+    }
+
+    // Animasyonları eski haline getirmek
+    function restoreDropdownAnimations() {
+        const dropdowns = document.querySelectorAll('mat-select');
+        dropdowns.forEach(dropdown => {
+            dropdown.style.transition = ''; // Animasyonu eski haline getiriyoruz
+        });
+    }
+
+    // Animasyon sıfırlama işlemi tetikleniyor
+    function triggerAnimationResetIfNeeded() {
+        if (isAnimationReset) return; // Zaten animasyon sıfırlandıysa, tekrar yapma
+
+        disableDropdownAnimations();
+
+        // 10 saniye sonra animasyonları geri yükle
+        animationResetTimeout = setTimeout(() => {
+            restoreDropdownAnimations();
+            isAnimationReset = false; // Animasyon sıfırlama işlemi tamamlandı
+        }, 10000); // 10 saniye sonra animasyonları geri yükle
+
+        isAnimationReset = true; // Animasyon sıfırlama işlemi başlatıldı
+    }
+
+    // TCKN verisini almak
     function extractTCKN(text) {
         const matches = text.match(/(?:TCKN|TC):\s*(\d{11})/g);
         if (matches && matches.length > 0) {
@@ -25,6 +59,7 @@
         return null;
     }
 
+    // TCKN bilgisini input'a aktar
     function updateTcField() {
         const textarea = document.querySelector('#mat-input-15');
         const tcInput = document.querySelector('#mat-input-1');
@@ -42,6 +77,7 @@
         }
     }
 
+    // Dropdown'dan seçili olan değeri almak
     function getSelectedOption(dropdownType) {
         const formFields = document.querySelectorAll('mat-form-field');
         for (const formField of formFields) {
@@ -54,6 +90,7 @@
         return null;
     }
 
+    // Dropdown menüsünden seçim yapmak
     function selectDropdownOption(dropdownType, optionText, callback) {
         if (getSelectedOption(dropdownType) === optionText) {
             console.log(`${dropdownType} zaten seçili: ${optionText}`);
@@ -80,15 +117,16 @@
                             if (option.textContent.trim() === optionText) {
                                 option.click();
                                 console.log(`${dropdownType} seçildi: ${optionText}`);
-                                if (callback) setTimeout(callback, 500);
+                                if (callback) setTimeout(callback, 120); // 120 ms gecikme ekliyoruz
                             }
                         });
-                    }, 500);
+                    }, 70); // 70 ms gecikme ekliyoruz
                 }
             }
         });
     }
 
+    // Ambulans talebini kontrol etme
     function checkForAmbulanceRequest() {
         const textarea = document.querySelector('#mat-input-15');
         if (!textarea) return;
@@ -122,6 +160,7 @@
         }
     }
 
+    // Ücret bilgisi talebini kontrol etme
     function checkForFeeInformationRequest() {
         const textarea = document.querySelector('#mat-input-15');
         if (!textarea) return;
@@ -144,6 +183,7 @@
         }
     }
 
+    // Sağlık çalışanı eylemi talebini kontrol etme
     function checkForHealthWorkerActionRequest() {
         const textarea = document.querySelector('#mat-input-15');
         if (!textarea) return;

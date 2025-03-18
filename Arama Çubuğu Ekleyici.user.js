@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arama Çubuğu Ekleyici
-// @version      2.2
-// @description  Arama Çubuğu Ekleyici (Dropdown Menü) 
+// @version      2.3
+// @description  Arama Çubuğu Ekleyici (Dropdown Menü)
 // @author       Rage17
 // @match        *://*/*
 // @grant        none
@@ -29,6 +29,11 @@
             const panelElement = document.querySelector(panelId);
 
             if (panelElement && !panelElement.querySelector('.search-box')) {
+                const options = Array.from(panelElement.querySelectorAll('mat-option'));
+
+                // Eğer seçenek sayısı 3'ten azsa, arama kutusu ekleme
+                if (options.length < 3) return;
+
                 const searchBox = document.createElement('input');
                 searchBox.type = 'text';
                 searchBox.placeholder = 'Ara...';
@@ -47,9 +52,11 @@
 
                 panelElement.insertBefore(searchBox, panelElement.firstChild);
 
+                let activeIndex = -1;  // Seçili öğe için başlangıç
+                const visibleOptions = options.filter(option => option.style.display !== 'none');
+
                 searchBox.addEventListener('input', function() {
                     const searchTerm = normalizeText(searchBox.value);
-                    const options = Array.from(panelElement.querySelectorAll('mat-option'));
 
                     let startsWithMatches = [];
                     let containsMatches = [];
@@ -65,7 +72,6 @@
                         }
                     });
 
-                    // Alfabetik olarak sırala
                     startsWithMatches.sort((a, b) => a.textContent.localeCompare(b.textContent, 'tr'));
                     containsMatches.sort((a, b) => a.textContent.localeCompare(b.textContent, 'tr'));
 
@@ -76,12 +82,23 @@
                 });
 
                 searchBox.addEventListener('keydown', function(event) {
-                    if (event.key === 'Enter') {
+                    const visibleOptions = Array.from(panelElement.querySelectorAll('mat-option:not([style*="display: none"])'));
+
+                    if (event.key === 'ArrowDown') {
                         event.preventDefault();
-                        const firstVisibleOption = panelElement.querySelector('mat-option:not([style*="display: none"])');
-                        if (firstVisibleOption) {
-                            firstVisibleOption.click();
+                        activeIndex = (activeIndex + 1) % visibleOptions.length;
+                        visibleOptions[activeIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    } else if (event.key === 'ArrowUp') {
+                        event.preventDefault();
+                        activeIndex = (activeIndex - 1 + visibleOptions.length) % visibleOptions.length;
+                        visibleOptions[activeIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    } else if (event.key === 'Enter') {
+                        event.preventDefault();
+                        if (activeIndex >= 0 && visibleOptions[activeIndex]) {
+                            visibleOptions[activeIndex].click();
                         }
+                    } else if (event.key === ' ') {
+                        event.stopPropagation(); // Space tuşu seçim yapmayacak
                     }
                 });
 
