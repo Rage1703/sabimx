@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Otomatik Kelime Tahmin
-// @version      1.3
-// @description  Türkçe ve Tıbbi terimler içeren yazım tahmini önerileri
+// @version      1.9
+// @description  Türkçe ve Tıbbi terimler içeren yazım tahmini önerileri (Optimize Edilmiş Kod)
 // @author       Rage17
 // @match        *://*/*
 // @grant        none
@@ -15,40 +15,73 @@
 
     // Türkçe karakterlere uygun büyük harfe çevirme fonksiyonu
     function toUpperCaseTurkish(text) {
-        return text.replace(/i/g, 'İ').replace(/ı/g, 'I').toUpperCase();
+        return text
+            .replace(/i/g, 'İ') // Küçük i harfini büyük İ harfine dönüştür
+            .replace(/ı/g, 'I') // Küçük ı harfini büyük I harfine dönüştür
+            .replace(/ç/g, 'Ç') // Küçük ç harfini büyük Ç harfine dönüştür
+            .replace(/ğ/g, 'Ğ') // Küçük ğ harfini büyük Ğ harfine dönüştür
+            .replace(/ö/g, 'Ö') // Küçük ö harfini büyük Ö harfine dönüştür
+            .replace(/ş/g, 'Ş') // Küçük ş harfini büyük Ş harfine dönüştür
+            .replace(/ü/g, 'Ü') // Küçük ü harfini büyük Ü harfine dönüştür
+            .toUpperCase(); // Geri kalan harfleri büyük harfe çevir
     }
 
-    async function fetchDictionaries() {
-        const generalWordsUrl = 'https://raw.githubusercontent.com/Rage1703/sabimx/main/kelimeveritabani/kelimeler.json';
-        const medicalTermsUrl = 'https://raw.githubusercontent.com/Rage1703/sabimx/main/kelimeveritabani/tibbi_terimler.json'; // Tıbbi terimlerin URL'si
-
+    // JSON dosyasını indiren yardımcı fonksiyon
+    async function fetchJSON(url) {
         try {
-            // Genel sözlük verilerini çek
-            const generalResponse = await fetch(generalWordsUrl);
-            if (!generalResponse.ok) {
-                throw new Error(`Genel sözlük yüklenemedi: ${generalResponse.status}`);
-            }
-            const generalWords = await generalResponse.json();
-            dictionary.push(...generalWords.map(word => toUpperCaseTurkish(word.trim())));
-
-            // Tıbbi terim verilerini çek
-            const medicalResponse = await fetch(medicalTermsUrl);
-            if (!medicalResponse.ok) {
-                throw new Error(`Tıbbi terimler yüklenemedi: ${medicalResponse.status}`);
-            }
-            medicalTerms = await medicalResponse.json();
-            dictionary.push(...medicalTerms.map(term => toUpperCaseTurkish(term.trim())));
-
-            dictionary = [...new Set(dictionary)]; // Tekrar eden kelimeleri kaldır
-            console.log('Sözlükler başarıyla yüklendi:', dictionary);
+            const response = await fetch(url, { headers: { 'Accept': 'application/json; charset=utf-8' } });
+            if (!response.ok) throw new Error(`Dosya yüklenemedi: ${url} (Durum: ${response.status})`);
+            return await response.json();
         } catch (error) {
-            console.error('Sözlük yüklenirken hata oluştu:', error);
+            console.error(`JSON dosyası indirilirken hata oluştu: ${error.message}`);
+            return [];
         }
     }
 
-    // Sayfa yüklendiğinde sözlükleri yükle
+    // Yerel depolamadan sözlükleri yükleme
+    function loadDictionariesFromLocalStorage() {
+        const generalWords = JSON.parse(localStorage.getItem('generalWords')) || [];
+        const medicalTerms = JSON.parse(localStorage.getItem('medicalTerms')) || [];
+        dictionary = [...new Set([...generalWords, ...medicalTerms])];
+        console.log('Yerel depolamadan sözlükler yüklendi:', dictionary);
+    }
+
+    // JSON dosyalarını indirip yerel depolamaya kaydetme
+    async function updateDictionaries() {
+        try {
+            console.log('JSON dosyaları indiriliyor...');
+            const generalWords = await fetchJSON('https://raw.githubusercontent.com/Rage1703/sabimx/main/kelimeveritabani/kelimeler.json');
+            const medicalTerms = await fetchJSON('https://raw.githubusercontent.com/Rage1703/sabimx/main/kelimeveritabani/tibbi_terimler.json');
+
+            localStorage.setItem('generalWords', JSON.stringify(generalWords));
+            localStorage.setItem('medicalTerms', JSON.stringify(medicalTerms));
+            localStorage.setItem('lastUpdate', Date.now());
+
+            console.log('JSON dosyaları güncellendi ve yerel depolamaya kaydedildi.');
+        } catch (error) {
+            console.error('JSON dosyaları güncellenirken hata oluştu:', error);
+        }
+    }
+
+    // Güncelleme kontrolü
+    async function checkForUpdates() {
+        const lastUpdate = parseInt(localStorage.getItem('lastUpdate'), 10) || 0;
+        const now = Date.now();
+
+        if (now - lastUpdate > 24 * 60 * 60 * 1000) { // 24 saat
+            console.log('24 saat geçti, JSON dosyaları güncelleniyor...');
+            await updateDictionaries();
+        } else {
+            console.log('JSON dosyaları güncel, güncelleme yapılmadı.');
+        }
+
+        loadDictionariesFromLocalStorage();
+    }
+
+    // Sayfa yüklendiğinde sözlükleri kontrol et ve normalize et
     window.addEventListener('load', () => {
-        fetchDictionaries();
+        checkForUpdates();
+        normalizeDictionary(); // Sözlükteki kelimeleri normalize et
     });
 
     let activeIndex = -1;  // Seçilen öğe
@@ -57,30 +90,19 @@
     // Türkçe karakterleri normalize eden yardımcı fonksiyon
     function normalizeTurkishChars(text) {
         return text
-            .toLowerCase()
+            .replace(/İ/g, 'i') // Büyük İ harfini küçük i'ye dönüştür
+            .replace(/ı/g, 'i') // Küçük ı harfini küçük i'ye dönüştür
+            .replace(/I/g, 'ı') // Büyük I harfini küçük ı'ya dönüştür
+            .replace(/i/g, 'i') // Küçük i harfini normalize et
+            .toLowerCase('tr') // Türkçe diline uygun küçük harfe çevirme
             .replace(/ç/g, 'c')
             .replace(/ğ/g, 'g')
-            .replace(/ı/g, 'i') // Türkçe 'ı' harfini 'i' olarak normalize et
             .replace(/ö/g, 'o')
             .replace(/ş/g, 's')
-            .replace(/ü/g, 'u')
-            .replace(/İ/g, 'i'); // Büyük 'İ' harfini küçük 'i' olarak normalize et
+            .replace(/ü/g, 'u');
     }
 
-    // Sadece günlük ve tıbbi terimlerin kullanılmasını sağlamak için sözlüğü filtrele
-    function filterDictionary() {
-        dictionary = dictionary.filter(word => {
-            const medicalTerms = [
-                "ağrı", "ameliyat", "antibiyotik", "ateş", "bağışıklık", "doktor", "enfeksiyon",
-                "grip", "hastane", "ilaç", "kanser", "muayene", "sağlık", "tedavi", "tıbbi", "virüs"
-            ];
-            return medicalTerms.includes(word.toLowerCase());
-        });
-    }
-
-    // Kullanıcının girdiği metni alıp tahminler sunan fonksiyon
     function showPredictions(inputElement) {
-        // Önceki tahmin kutusunu kaldır
         const previousContainer = document.querySelector('.prediction-container');
         if (previousContainer) {
             previousContainer.remove();
@@ -91,16 +113,15 @@
         container.style.position = 'absolute';
         container.style.backgroundColor = '#b2b2b2';
         container.style.border = '1px solid #ccc';
-        container.style.maxHeight = '150px'; // Kutu yüksekliği küçültüldü
+        container.style.maxHeight = '150px';
         container.style.overflowY = 'auto';
         container.style.zIndex = '1000';
-        container.style.width = `${inputElement.offsetWidth * 0.8}px`; // Genişlik biraz küçültüldü
-        container.style.borderRadius = '4px'; // Daha az yuvarlak köşeler
+        container.style.borderRadius = '4px';
         container.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-        container.style.scrollbarWidth = 'thin'; // Zarif kaydırma çubuğu
-        container.style.scrollbarColor = '#888 #ccc'; // Kaydırma çubuğu renkleri
+        container.style.scrollbarWidth = 'thin';
+        container.style.scrollbarColor = '#888 #ccc';
+        container.style.transition = 'width 0.3s ease'; // Yumuşak animasyon
 
-        // Tahmin kutusunun konumunu ayarla
         const rect = inputElement.getBoundingClientRect();
         const cursorPosition = getCaretCoordinates(inputElement, inputElement.selectionStart);
         const lineHeight = parseInt(window.getComputedStyle(inputElement).lineHeight, 10) || 20;
@@ -110,46 +131,58 @@
         const query = normalizeTurkishChars(inputElement.value.trim().split(' ').pop());
         console.log("Girilen metin:", query);
 
-        // Türkçe sözlükten ve tıbbi terimlerden eşleşmeleri bul
+        // Performans için filtreleme ve sıralama optimize edildi
         suggestions = dictionary
-            .filter(word => normalizeTurkishChars(word).includes(query))
+            .filter(word => normalizeTurkishChars(word).includes(query)) // Normalize edilmiş eşleşme
+            .slice(0, 50) // İlk 50 eşleşmeyi al
             .sort((a, b) => {
-                // En yakın eşleşmeleri önce göstermek için sıralama
                 const aStartsWith = normalizeTurkishChars(a).startsWith(query);
                 const bStartsWith = normalizeTurkishChars(b).startsWith(query);
                 if (aStartsWith && !bStartsWith) return -1;
                 if (!aStartsWith && bStartsWith) return 1;
-                return a.localeCompare(b); // Alfabetik sıralama
+                return a.localeCompare(b);
             });
 
         console.log("Eşleşen tahminler:", suggestions);
 
-        // Yeni tahminleri ekle
+        // Caps Lock durumunu kontrol et
+        const isCapsLockOn = window.lastCapsLockState || false;
+
+        // En uzun tahminin genişliğini hesapla
+        const tempSpan = document.createElement('span');
+        tempSpan.style.visibility = 'hidden';
+        tempSpan.style.position = 'absolute';
+        tempSpan.style.fontSize = window.getComputedStyle(inputElement).fontSize;
+        tempSpan.style.fontFamily = window.getComputedStyle(inputElement).fontFamily;
+        document.body.appendChild(tempSpan);
+
+        let maxWidth = 0; // En uzun kelimenin genişliği
+        suggestions.forEach(match => {
+            const displayText = isCapsLockOn ? toUpperCaseTurkish(match) : match.toLowerCase(); // Büyük/küçük harf ayarı
+            tempSpan.textContent = displayText;
+            maxWidth = Math.max(maxWidth, tempSpan.offsetWidth + 20); // 20px padding ekle
+        });
+
+        document.body.removeChild(tempSpan);
+        container.style.width = `${maxWidth}px`; // Dinamik genişlik ayarla
+
         suggestions.forEach((match, index) => {
             const item = document.createElement('div');
             item.classList.add('prediction-item');
-            item.style.padding = '6px'; // Daha dar iç boşluk
+            item.style.padding = '6px';
             item.style.cursor = 'pointer';
             item.style.borderBottom = '1px solid #eee';
             item.style.backgroundColor = '#fff';
-            item.style.fontSize = '14px'; // Yazı boyutu VS Code varsayılanına ayarlandı
-            item.textContent = match;
-
-            // Tahmin numarasını ekle
-            const numberSpan = document.createElement('span');
-            numberSpan.textContent = ` ${index + 1}`; // Tahmin numarası
-            numberSpan.style.float = 'right'; // Sağ köşeye hizala
-            numberSpan.style.color = '#888'; // Gri renk
-            numberSpan.style.fontSize = '12px'; // Daha küçük yazı boyutu
-            item.appendChild(numberSpan);
+            item.style.fontSize = '14px';
+            item.textContent = isCapsLockOn ? toUpperCaseTurkish(match) : match.toLowerCase(); // Büyük/küçük harf ayarı
 
             item.addEventListener('mouseover', () => {
-                activeIndex = index; // Aktif öğeyi güncelle
+                activeIndex = index;
                 updateActiveItem();
             });
 
             item.addEventListener('mouseout', () => {
-                activeIndex = -1; // Aktif öğeyi sıfırla
+                activeIndex = -1;
                 updateActiveItem();
             });
 
@@ -163,17 +196,23 @@
 
         if (suggestions.length > 0) {
             document.body.appendChild(container);
+            activeIndex = 0; // İlk tahmine otomatik odaklan
+            updateActiveItem();
         }
     }
 
-    // Aktif öğeyi güncelleyen yardımcı fonksiyon
+    // Caps Lock durumunu güncelleyen olay dinleyici
+    document.addEventListener('keydown', function(event) {
+        window.lastCapsLockState = event.getModifierState('CapsLock');
+    });
+
     function updateActiveItem() {
         const predictionItems = document.querySelectorAll('.prediction-item');
         predictionItems.forEach((item, index) => {
             if (index === activeIndex) {
                 item.style.backgroundColor = '#663399';
                 item.style.color = '#fff';
-                item.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); // Odakta olan öğeyi kaydır
+                item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             } else {
                 item.style.backgroundColor = '#fff';
                 item.style.color = '#000';
@@ -181,14 +220,17 @@
         });
     }
 
-    // Tahmini tamamlayan yardımcı fonksiyon
     function completePrediction(inputElement, match) {
-        const words = inputElement.value.split(' ');
-        words[words.length - 1] = match; // Son kelimeyi tahminle değiştir
-        inputElement.value = words.join(' '); // Yeni metni güncelle
+        const currentValue = inputElement.value.trim();
+        const lastSpaceIndex = currentValue.lastIndexOf(' ');
+
+        if (lastSpaceIndex === -1) {
+            inputElement.value = match + ' '; // Tahmin sonrası boşluk ekle
+        } else {
+            inputElement.value = currentValue.substring(0, lastSpaceIndex + 1) + match + ' '; // Tahmin sonrası boşluk ekle
+        }
     }
 
-    // Textarea'daki caret (imleç) konumunu hesaplayan yardımcı fonksiyon
     function getCaretCoordinates(element, position) {
         const div = document.createElement('div');
         const style = window.getComputedStyle(element);
@@ -213,7 +255,6 @@
         return coordinates;
     }
 
-    // Ok tuşları ile tahminleri seçme ve yazıya aktar
     function handleArrowKeys(event, inputElement) {
         const predictionItems = document.querySelectorAll('.prediction-item');
         if (event.key === 'ArrowDown') {
@@ -237,40 +278,31 @@
         }
     }
 
-    // Her yazı girdiğinde tahminleri göster
-    document.addEventListener('input', async function(event) {
-        const inputElement = event.target;
+    // Sözlükteki kelimeleri normalize etme
+    function normalizeDictionary() {
+        dictionary = dictionary.map(word => normalizeTurkishChars(word));
+    }
 
-        // Yalnızca input alanlarında çalışacak
+    // Her kelime için tahmin kutusunu göster
+    document.addEventListener('input', function(event) {
+        const inputElement = event.target;
         if (inputElement.tagName === 'TEXTAREA') {
             const query = inputElement.value.trim();
-            if (query.length > 2) { // En az 3 harf yazıldığında API'yi çağır
-                const tdkResults = await fetchFromTDKAPI(query);
-                dictionary.push(...tdkResults); // API'den gelen sonuçları sözlüğe ekle
-                showPredictions(inputElement); // Tahminleri göster
+            if (query.length > 0) { // Her kelime için tahminleri göster
+                showPredictions(inputElement);
+            } else {
+                hidePredictions(inputElement);
             }
         }
     });
 
-    // Klavye kısayollarını dinle
     document.addEventListener('keydown', function(event) {
         const inputElement = document.activeElement;
-
-        // Yalnızca input ve textarea alanlarında çalışacak
         if (inputElement.tagName === 'TEXTAREA' && document.querySelector('.prediction-item')) {
-            const key = parseInt(event.key, 10); // Basılan tuşu sayıya çevir
-            if (!isNaN(key) && key > 0 && key <= suggestions.length) {
-                // Numara tuşuna basıldığında tahmini tamamla
-                event.preventDefault(); // Rakamın yazılmasını engelle
-                completePrediction(inputElement, suggestions[key - 1]); // Sadece tahmini yaz
-                document.querySelector('.prediction-container').remove();
-            } else {
-                handleArrowKeys(event, inputElement); // Ok tuşlarını işle
-            }
+            handleArrowKeys(event, inputElement);
         }
     });
 
-    // Yazı yazmayı bitirdiğinde tahmin kutusunu gizle
     document.addEventListener('blur', function(event) {
         const inputElement = event.target;
         if (inputElement.tagName === 'TEXTAREA') {
@@ -280,22 +312,4 @@
             }
         }
     }, true);
-
-    async function fetchFromTDKAPI(query) {
-        const apiUrl = `https://tdk-api-url.com/search?q=${query}`; // TDK API'nin URL'si
-
-        try {
-            const response = await fetch(apiUrl);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log('TDK API verileri:', data); // Hata ayıklama için konsola yaz
-            return data;
-        } catch (error) {
-            console.error('TDK API çağrısı sırasında hata oluştu:', error);
-            return [];
-        }
-    }
 })();
