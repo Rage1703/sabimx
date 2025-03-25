@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arama Çubuğu Ekleyici
-// @version      2.3
-// @description  Arama Çubuğu Ekleyici (Dropdown Menü)
+// @version      2.9
+// @description  Arama Çubuğu Ekleyici (Dropdown Menü) 
 // @author       Rage17
 // @match        *://*/*
 // @grant        none
@@ -18,6 +18,34 @@
         return text.replace(/ç|ğ|ı|ö|ş|ü|Ç|Ğ|İ|Ö|Ş|Ü/g, match => charMap[match]).toLowerCase();
     }
 
+    function addCustomStyles() {
+        const style = document.createElement('style');
+        style.textContent = `
+            /* Sayfanın kendi seçili stilini kaldır */
+            mat-option.mat-selected {
+                background-color: transparent !important;
+                color: inherit !important;
+            }
+
+            /* Yalnızca bizim seçili stilimiz aktif olsun */
+            .selected-option {
+                background-color: #a0e7e5 !important; /* Açık Turkuaz */
+                color: black !important;
+                font-weight: bold;
+                border: 2px solid #00bcd4 !important; /* Mavi çerçeve */
+            }
+
+            /* Focus olan option'ı da belirginleştirelim */
+            .focused-option {
+                background-color: #00bcd4 !important; /* Mavi Arkaplan */
+                color: white !important;
+                font-weight: bold;
+                outline: 2px solid #ffffff !important; /* Beyaz Kenarlık */
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
     function makeMatSelectSearchable() {
         const matSelects = document.querySelectorAll('mat-select');
 
@@ -31,7 +59,6 @@
             if (panelElement && !panelElement.querySelector('.search-box')) {
                 const options = Array.from(panelElement.querySelectorAll('mat-option'));
 
-                // Eğer seçenek sayısı 3'ten azsa, arama kutusu ekleme
                 if (options.length < 3) return;
 
                 const searchBox = document.createElement('input');
@@ -52,12 +79,27 @@
 
                 panelElement.insertBefore(searchBox, panelElement.firstChild);
 
-                let activeIndex = -1;  // Seçili öğe için başlangıç
-                const visibleOptions = options.filter(option => option.style.display !== 'none');
+                let activeIndex = -1;
+
+                function updateSelection(visibleOptions, index) {
+                    visibleOptions.forEach((option, i) => {
+                        if (i === index) {
+                            option.classList.add('focused-option'); // Focus edilen öğe
+                            option.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        } else {
+                            option.classList.remove('focused-option');
+                        }
+
+                        if (i === activeIndex) {
+                            option.classList.add('selected-option'); // Seçilen öğe
+                        } else {
+                            option.classList.remove('selected-option');
+                        }
+                    });
+                }
 
                 searchBox.addEventListener('input', function() {
                     const searchTerm = normalizeText(searchBox.value);
-
                     let startsWithMatches = [];
                     let containsMatches = [];
 
@@ -78,7 +120,12 @@
                     const sortedOptions = [...startsWithMatches, ...containsMatches];
                     sortedOptions.forEach(option => option.style.display = '');
 
-                    searchBox.dataset.firstVisibleOption = sortedOptions.length > 0 ? sortedOptions[0].dataset.index : '';
+                    if (sortedOptions.length > 0) {
+                        activeIndex = 0;
+                        updateSelection(sortedOptions, activeIndex);
+                    } else {
+                        activeIndex = -1;
+                    }
                 });
 
                 searchBox.addEventListener('keydown', function(event) {
@@ -86,20 +133,28 @@
 
                     if (event.key === 'ArrowDown') {
                         event.preventDefault();
-                        activeIndex = (activeIndex + 1) % visibleOptions.length;
-                        visibleOptions[activeIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        if (visibleOptions.length > 0) {
+                            if (activeIndex === -1) {
+                                activeIndex = 0; // İlk basışta doğrudan ilk elemana git
+                            } else {
+                                activeIndex = (activeIndex + 1) % visibleOptions.length;
+                            }
+                        }
                     } else if (event.key === 'ArrowUp') {
                         event.preventDefault();
-                        activeIndex = (activeIndex - 1 + visibleOptions.length) % visibleOptions.length;
-                        visibleOptions[activeIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        if (visibleOptions.length > 0) {
+                            activeIndex = (activeIndex - 1 + visibleOptions.length) % visibleOptions.length;
+                        }
                     } else if (event.key === 'Enter') {
                         event.preventDefault();
                         if (activeIndex >= 0 && visibleOptions[activeIndex]) {
                             visibleOptions[activeIndex].click();
                         }
                     } else if (event.key === ' ') {
-                        event.stopPropagation(); // Space tuşu seçim yapmayacak
+                        event.stopPropagation();
                     }
+
+                    updateSelection(visibleOptions, activeIndex);
                 });
 
                 matSelect.addEventListener('keydown', (event) => {
@@ -120,6 +175,8 @@
         });
     }
 
+    addCustomStyles();
+
     const observer = new MutationObserver(() => {
         makeMatSelectSearchable();
     });
@@ -129,4 +186,5 @@
     window.addEventListener('load', () => {
         makeMatSelectSearchable();
     });
+
 })();

@@ -16,13 +16,6 @@
     // Türkçe karakterlere uygun büyük harfe çevirme fonksiyonu
     function toUpperCaseTurkish(text) {
         return text
-            .replace(/i/g, 'İ') // Küçük i harfini büyük İ harfine dönüştür
-            .replace(/ı/g, 'I') // Küçük ı harfini büyük I harfine dönüştür
-            .replace(/ç/g, 'Ç') // Küçük ç harfini büyük Ç harfine dönüştür
-            .replace(/ğ/g, 'Ğ') // Küçük ğ harfini büyük Ğ harfine dönüştür
-            .replace(/ö/g, 'Ö') // Küçük ö harfini büyük Ö harfine dönüştür
-            .replace(/ş/g, 'Ş') // Küçük ş harfini büyük Ş harfine dönüştür
-            .replace(/ü/g, 'Ü') // Küçük ü harfini büyük Ü harfine dönüştür
             .toUpperCase(); // Geri kalan harfleri büyük harfe çevir
     }
 
@@ -91,17 +84,21 @@
     function normalizeTurkishChars(text) {
         return text
             .replace(/İ/g, 'i') // Büyük İ harfini küçük i'ye dönüştür
-            .replace(/ı/g, 'i') // Küçük ı harfini küçük i'ye dönüştür
-            .replace(/I/g, 'ı') // Büyük I harfini küçük ı'ya dönüştür
-            .replace(/i/g, 'i') // Küçük i harfini normalize et
-            .toLowerCase('tr') // Türkçe diline uygun küçük harfe çevirme
-            .replace(/ç/g, 'c')
-            .replace(/ğ/g, 'g')
-            .replace(/ö/g, 'o')
-            .replace(/ş/g, 's')
-            .replace(/ü/g, 'u');
+            .replace(/i/g, 'İ') // Büyük i harfini küçük İ'ye dönüştür
+            .replace(/ı/g, 'I') // Küçük ı harfini küçük I'ye dönüştür
+            .replace(/I/g, 'ı') // Büyük I harfini küçük ı'ye dönüştür
+            .replace(/ç/g, 'Ç') // Küçük ç harfini büyük Ç'ye dönüştür
+            .replace(/Ç/g, 'ç') // Büyük Ç harfini küçük ç'ye dönüştür
+            .replace(/ğ/g, 'Ğ') // Küçük ğ harfini büyük Ğ'ye dönüştür
+            .replace(/Ğ/g, 'ğ') // Büyük Ğ harfini küçük ğ'ye dönüştür
+            .replace(/ö/g, 'Ö') // Küçük ö harfini büyük Ö'ye dönüştür
+            .replace(/Ö/g, 'ö') // Büyük Ö harfini küçük ö'ye dönüştür
+            .replace(/ş/g, 'Ş') // Küçük ş harfini büyük Ş'ye dönüştür
+            .replace(/Ş/g, 'ş') // Büyük Ş harfini küçük ş'ye dönüştür
+            .replace(/ü/g, 'Ü') // Küçük ü harfini BÜYÜK ü'ye dönüştür
+            .replace(/Ü/g, 'ü') // Büyük Ü harfini küçük ü'ye dönüştür
+            .toLowerCase('tr'); // Geri kalan harfleri Türkçe diline uygun küçük harfe çevir
     }
-
     function showPredictions(inputElement) {
         const previousContainer = document.querySelector('.prediction-container');
         if (previousContainer) {
@@ -121,6 +118,7 @@
         container.style.scrollbarWidth = 'thin';
         container.style.scrollbarColor = '#888 #ccc';
         container.style.transition = 'width 0.3s ease'; // Yumuşak animasyon
+        container.style.fontFamily = 'Franklin Gothic, Arial, sans-serif !important'; // Font zorlandı
 
         const rect = inputElement.getBoundingClientRect();
         const cursorPosition = getCaretCoordinates(inputElement, inputElement.selectionStart);
@@ -174,16 +172,19 @@
             item.style.borderBottom = '1px solid #eee';
             item.style.backgroundColor = '#fff';
             item.style.fontSize = '14px';
+            item.style.fontFamily = 'Franklin Gothic, Arial, sans-serif !important'; // Font zorlandı
             item.textContent = isCapsLockOn ? toUpperCaseTurkish(match) : match.toLowerCase(); // Büyük/küçük harf ayarı
 
             item.addEventListener('mouseover', () => {
                 activeIndex = index;
                 updateActiveItem();
+                showLivePreview(inputElement, match); // Canlı önizleme
             });
 
             item.addEventListener('mouseout', () => {
                 activeIndex = -1;
                 updateActiveItem();
+                clearLivePreview(inputElement); // Önizlemeyi temizle
             });
 
             item.addEventListener('click', () => {
@@ -198,11 +199,58 @@
             document.body.appendChild(container);
             activeIndex = 0; // İlk tahmine otomatik odaklan
             updateActiveItem();
+            showLivePreview(inputElement, suggestions[0]); // İlk tahmin için önizleme
+        } else {
+            clearLivePreview(inputElement); // Tahmin yoksa önizlemeyi temizle
+        }
+    }
+
+    // Canlı önizleme göster
+    function showLivePreview(inputElement, match) {
+        const currentValue = inputElement.value.trim();
+        const lastSpaceIndex = currentValue.lastIndexOf(' ');
+        const baseText = lastSpaceIndex === -1 ? currentValue : currentValue.substring(0, lastSpaceIndex + 1);
+        const previewText = match.substring(baseText.length).trim();
+
+        // Önceki önizlemeyi temizle
+        clearLivePreview(inputElement);
+
+        // Caps Lock durumunu kontrol et
+        const isCapsLockOn = window.lastCapsLockState || false;
+        const displayText = isCapsLockOn ? toUpperCaseTurkish(previewText) : previewText;
+
+        // Placeholder gibi tamamlama için ::after yerine overlay kullanımı
+        const rect = inputElement.getBoundingClientRect();
+        const caretCoordinates = getCaretCoordinates(inputElement, inputElement.selectionStart);
+
+        const previewSpan = document.createElement('span');
+        previewSpan.classList.add('live-preview');
+        previewSpan.style.position = 'absolute';
+        previewSpan.style.color = '#ccc';
+        previewSpan.style.pointerEvents = 'none';
+        previewSpan.style.fontSize = window.getComputedStyle(inputElement).fontSize;
+        previewSpan.style.fontFamily = window.getComputedStyle(inputElement).fontFamily;
+        previewSpan.style.whiteSpace = 'pre';
+        previewSpan.style.left = `${rect.left + caretCoordinates.left + window.scrollX}px`;
+        previewSpan.style.top = `${rect.top + caretCoordinates.top + window.scrollY}px`;
+        previewSpan.textContent = displayText;
+
+        document.body.appendChild(previewSpan);
+    }
+
+    // Canlı önizlemeyi temizle
+    function clearLivePreview(inputElement) {
+        const previewSpan = document.querySelector('.live-preview');
+        if (previewSpan) {
+            previewSpan.remove();
         }
     }
 
     // Caps Lock durumunu güncelleyen olay dinleyici
     document.addEventListener('keydown', function(event) {
+        window.lastCapsLockState = event.getModifierState('CapsLock');
+    });
+    document.addEventListener('keyup', function(event) {
         window.lastCapsLockState = event.getModifierState('CapsLock');
     });
 
@@ -221,14 +269,8 @@
     }
 
     function completePrediction(inputElement, match) {
-        const currentValue = inputElement.value.trim();
-        const lastSpaceIndex = currentValue.lastIndexOf(' ');
-
-        if (lastSpaceIndex === -1) {
-            inputElement.value = match + ' '; // Tahmin sonrası boşluk ekle
-        } else {
-            inputElement.value = currentValue.substring(0, lastSpaceIndex + 1) + match + ' '; // Tahmin sonrası boşluk ekle
-        }
+        // Tahmin sonucunu doğrudan metin alanına yaz
+        inputElement.value = match + ' '; // Tahmin sonrası boşluk ekle
     }
 
     function getCaretCoordinates(element, position) {
@@ -262,18 +304,21 @@
             if (activeIndex < predictionItems.length - 1) {
                 activeIndex++;
                 updateActiveItem();
+                showLivePreview(inputElement, suggestions[activeIndex]); // Önizleme
             }
         } else if (event.key === 'ArrowUp') {
             event.preventDefault();
             if (activeIndex > 0) {
                 activeIndex--;
                 updateActiveItem();
+                showLivePreview(inputElement, suggestions[activeIndex]); // Önizleme
             }
         } else if (event.key === 'Enter') {
             event.preventDefault();
             if (activeIndex >= 0 && predictionItems[activeIndex]) {
                 completePrediction(inputElement, predictionItems[activeIndex].textContent);
                 document.querySelector('.prediction-container').remove();
+                clearLivePreview(inputElement); // Önizlemeyi temizle
             }
         }
     }
@@ -306,10 +351,19 @@
     document.addEventListener('blur', function(event) {
         const inputElement = event.target;
         if (inputElement.tagName === 'TEXTAREA') {
-            const container = inputElement.parentElement.querySelector('.prediction-container');
+            const container = document.querySelector('.prediction-container');
             if (container) {
                 container.remove();
             }
+            clearLivePreview(inputElement); // Tahmin kutusu kapandığında önizlemeyi temizle
         }
     }, true);
+
+    function hidePredictions(inputElement) {
+        const container = document.querySelector('.prediction-container');
+        if (container) {
+            container.remove();
+        }
+        clearLivePreview(inputElement); // Tahmin kutusu gizlendiğinde önizlemeyi temizle
+    }
 })();
